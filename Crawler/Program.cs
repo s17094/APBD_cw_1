@@ -3,10 +3,22 @@
 HttpClient httpClient = new HttpClient();
 EmailSearcher emailSearcher = new EmailSearcher(httpClient);
 
-String url = args[0];
+string url = GetUrl(args);
 HashSet<String> emailsFounded = await emailSearcher.Search(url);
-
+    
 PrintFoundedEmails(emailsFounded);
+
+string GetUrl(string[] args)
+{
+    try
+    {
+        return args[0];
+    }
+    catch (IndexOutOfRangeException)
+    {
+        throw new ArgumentNullException(nameof(args));
+    }
+}
 
 void PrintFoundedEmails(HashSet<String> emailsFounded)
 {
