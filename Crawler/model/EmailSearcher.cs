@@ -31,6 +31,7 @@ namespace Crawler.models
         private async Task<string> GetResponseBodyAsync(string url)
         {
             HttpResponseMessage httpResponse = httpClient.Send(new HttpRequestMessage(HttpMethod.Get, url));
+            httpClient.Dispose();
             return await httpResponse.Content.ReadAsStringAsync();
         }
 
