@@ -12,11 +12,23 @@ string GetUrl(string[] args)
 {
     try
     {
-        return args[0];
+        string url = args[0];
+        ValidateUrl(url);
+        return url;
     }
     catch (IndexOutOfRangeException)
     {
         throw new ArgumentNullException(nameof(args));
+    }
+}
+
+void ValidateUrl(string url)
+{
+    bool result = Uri.TryCreate(url, UriKind.Absolute, out Uri? uriResult)
+        && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+    if (!result)
+    {
+        throw new ArgumentException("Not valid url: " + url);
     }
 }
 
