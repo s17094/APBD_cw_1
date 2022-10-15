@@ -1,8 +1,7 @@
 ﻿using Crawler.models;
-using System;
 
-HttpClient httpClient = new HttpClient();
-EmailSearcher emailSearcher = new EmailSearcher(httpClient);
+HttpClient httpClient = new();
+EmailSearcher emailSearcher = new(httpClient);
 
 string url = GetUrl(args);
 
@@ -17,7 +16,7 @@ catch (Exception)
     return;
 }
 
-PrintFoundedEmails(emails);
+PrintEmails(emails);
 
 string GetUrl(string[] args)
 {
@@ -43,23 +42,17 @@ void ValidateUrl(string url)
     }
 }
 
-void PrintFoundedEmails(HashSet<String> emailsFounded)
+void PrintEmails(HashSet<string> emails)
 {
-    if (emailsFounded != null && emailsFounded.Any())
+    if (emails != null && emails.Any())
     {
-        PrintEmails(emailsFounded);
+        foreach (string email in emails)
+        {
+            Console.WriteLine(email);
+        }
     }
     else
     {
         Console.WriteLine("No email addresses found.");
     }
 }
-
-void PrintEmails(HashSet<string> emails)
-{
-    foreach (string email in emails)
-    {
-        Console.WriteLine(email);
-    }
-}
-
