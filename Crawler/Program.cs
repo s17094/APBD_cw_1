@@ -49,6 +49,10 @@ void PrintFoundedEmails(HashSet<String> emailsFounded)
     {
         PrintEmails(emailsFounded);
     }
+    else
+    {
+        Console.WriteLine("No email addresses found.");
+    }
 }
 
 void PrintEmails(HashSet<string> emails)
