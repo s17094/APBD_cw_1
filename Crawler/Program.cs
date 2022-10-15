@@ -1,12 +1,23 @@
 ﻿using Crawler.models;
+using System;
 
 HttpClient httpClient = new HttpClient();
 EmailSearcher emailSearcher = new EmailSearcher(httpClient);
 
 string url = GetUrl(args);
-HashSet<String> emailsFounded = await emailSearcher.Search(url);
-    
-PrintFoundedEmails(emailsFounded);
+
+HashSet<string> emails;
+try
+{
+    emails = await emailSearcher.Search(url);
+}
+catch (Exception)
+{
+    Console.WriteLine("Error during page download.");
+    return;
+}
+
+PrintFoundedEmails(emails);
 
 string GetUrl(string[] args)
 {
