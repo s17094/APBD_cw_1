@@ -5,6 +5,7 @@
 
 ## My excludings
 Properties/
+.idea/
 
 # User-specific files
 *.rsuser
