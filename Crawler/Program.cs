@@ -1,14 +1,14 @@
-﻿using Crawler.models;
+﻿using Crawler.model;
 
 HttpClient httpClient = new();
 EmailSearcher emailSearcher = new(httpClient);
 
-string url = GetUrl(args);
+var destinationUrl = GetUrl(args);
 
-HashSet<string> emails;
+HashSet<string> foundedEmails;
 try
 {
-    emails = await emailSearcher.Search(url);
+    foundedEmails = await emailSearcher.Search(destinationUrl);
 }
 catch (Exception)
 {
@@ -16,13 +16,13 @@ catch (Exception)
     return;
 }
 
-PrintEmails(emails);
+PrintEmails(foundedEmails);
 
 string GetUrl(string[] args)
 {
     try
     {
-        string url = args[0];
+        var url = args[0];
         ValidateUrl(url);
         return url;
     }
@@ -34,8 +34,8 @@ string GetUrl(string[] args)
 
 void ValidateUrl(string url)
 {
-    bool result = Uri.TryCreate(url, UriKind.Absolute, out Uri? uriResult)
-        && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+    var result = Uri.TryCreate(url, UriKind.Absolute, out var uriResult)
+                 && (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
     if (!result)
     {
         throw new ArgumentException("Not valid url: " + url);
@@ -44,9 +44,9 @@ void ValidateUrl(string url)
 
 void PrintEmails(HashSet<string> emails)
 {
-    if (emails != null && emails.Any())
+    if (emails.Any())
     {
-        foreach (string email in emails)
+        foreach (var email in emails)
         {
             Console.WriteLine(email);
         }

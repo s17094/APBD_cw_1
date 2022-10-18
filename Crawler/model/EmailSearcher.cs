@@ -1,38 +1,38 @@
 ﻿using System.Text.RegularExpressions;
 
-namespace Crawler.models
+namespace Crawler.model
 {
     public class EmailSearcher
     {
-        private static readonly string USERNAME_REGEX = "[A-Z0-9._%+-]+";
-        private static readonly string DOMAIN_REGEX = "[A-Z0-9.-]+\\.[A-Z]{2,}";
-        private static readonly string EMAIL_REGEX = "\\b" + USERNAME_REGEX + "@" + DOMAIN_REGEX + "\\b";
-        private static readonly Regex EMAIL_PATTERN = new(EMAIL_REGEX, RegexOptions.IgnoreCase);
+        private const string UsernameRegex = "[A-Z0-9._%+-]+";
+        private const string DomainRegex = "[A-Z0-9.-]+\\.[A-Z]{2,}";
+        private const string EmailRegex = "\\b" + UsernameRegex + "@" + DomainRegex + "\\b";
+        private static readonly Regex EmailPattern = new(EmailRegex, RegexOptions.IgnoreCase);
 
-        private readonly HttpClient httpClient;
+        private readonly HttpClient _httpClient;
 
         public EmailSearcher(HttpClient httpClient)
         {
-            this.httpClient = httpClient;
+            _httpClient = httpClient;
         }
 
         private static HashSet<string> MatchEmails(string response)
         {
-            MatchCollection emailMatches = EMAIL_PATTERN.Matches(response);
-            return emailMatches.Cast<Match>()
+            var emailMatches = EmailPattern.Matches(response);
+            return emailMatches
                 .Select(m => m.Value).ToHashSet();
         }
 
         public async Task<HashSet<string>> Search(string url)
         {
-            string responseBody = await GetResponseBodyAsync(url);
+            var responseBody = await GetResponseBodyAsync(url);
             return MatchEmails(responseBody);
         }
 
         private async Task<string> GetResponseBodyAsync(string url)
         {
-            HttpResponseMessage httpResponse = httpClient.Send(new HttpRequestMessage(HttpMethod.Get, url));
-            httpClient.Dispose();
+            var httpResponse = await _httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Get, url));
+            _httpClient.Dispose();
             return await httpResponse.Content.ReadAsStringAsync();
         }
     }
